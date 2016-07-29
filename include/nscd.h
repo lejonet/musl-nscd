@@ -8,6 +8,7 @@
 #define GETPWBYUID 1
 #define GETGRBYNAME 2
 #define GETGRBYGID 3
+#define INITGROUPS 15
 
 #define REQVERSION 0
 #define REQTYPE 1
