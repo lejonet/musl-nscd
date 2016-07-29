@@ -11,7 +11,6 @@ int full_read(int fd, char *buf, size_t n)
 			if(errno == EINTR) continue;
 			return -1;
 		}
-		buf += cnt;
 		n -= cnt;
 	}
 	return 0;
