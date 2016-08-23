@@ -3,6 +3,8 @@
 
 #include "list.h"
 
+#include <unistd.h>
+#include <stdint.h>
 #include <stdio.h>
 
 typedef unsigned char database;
@@ -49,6 +51,14 @@ struct entry {
 	list_t services;
 	link_t link;
 };
+
+struct initgroups_response {
+        uint32_t version_or_size;
+        uint32_t found;
+        uint32_t nr_groups;
+        gid_t gid[0];
+};
+
 
 extern FILE *yyin;
 extern list_t parsed_output;
