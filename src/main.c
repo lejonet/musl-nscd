@@ -32,7 +32,14 @@ static void *get_fn(void *dll, const char *name, const char *service)
 {
 	char *fnname;
 	void *fn;
-	if(asprintf(&fnname, "_nss_%s_%s_r", service, name) < 0) die();
+	int res = -1;
+
+	if (strncmp("initgroups", name, 10) == 0)
+		res = asprintf(&fnname, "_nss_%s_%s_dyn", service, name);
+	else
+		res = asprintf(&fnname, "_nss_%s_%s_r", service, name);
+
+	if(res < 0) die();
 	fn = dlsym(dll, fnname);
 	if(!fn) die_fmt("%s: %s", fnname, dlerror());
 	free(fnname);
@@ -109,6 +116,7 @@ int main(int argc, char **argv)
 				dll = get_dll(service->service);
 				mod->nss_getgrnam_r = (nss_getgrnam_r)get_fn(dll, "getgrnam", service->service);
 				mod->nss_getgrgid_r = (nss_getgrgid_r)get_fn(dll, "getgrgid", service->service);
+				mod->initgroups_dyn_function = (initgroups_dyn_function)get_fn(dll, "initgroups", service->service);
 				dlclose(dll);
 
 				memcpy(mod->on_status, service->on_status, sizeof(mod->on_status));
