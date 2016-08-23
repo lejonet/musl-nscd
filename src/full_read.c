@@ -2,6 +2,9 @@
 #include <errno.h>
 #include "util.h"
 
+#include <stdlib.h>
+#include <syslog.h>
+
 int full_read(int fd, char *buf, size_t n)
 {
 	ssize_t cnt;
@@ -11,7 +14,10 @@ int full_read(int fd, char *buf, size_t n)
 			if(errno == EINTR) continue;
 			return -1;
 		}
+		buf += cnt;
 		n -= cnt;
 	}
+
+	syslog(LOG_DEBUG, "buf: %s: (as int: %d )", buf-n, atoi(buf-n));
 	return 0;
 }
